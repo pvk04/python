@@ -20,179 +20,142 @@ class App:
 
 # Создаем функции для кнопок с цифрами
 def but1_click():
-    global value
-    global res_counter
-
-    if res_counter == 0:
-        value += "1"
+    if App.res_counter == 0:
+        App.value += "1"
     else:
-        value = "1"
-        res_counter = 0
+        App.value = "1"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 def but2_click():
-    global value
-
-    global res_counter
-
-    if res_counter == 0:
-        value += "2"
+    if App.res_counter == 0:
+        App.value += "2"
     else:
-        value = "2"
-        res_counter = 0
+        App.value = "2"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 def but3_click():
-    global value
-    global res_counter
-
-    if res_counter == 0:
-        value += "3"
+    if App.res_counter == 0:
+        App.value += "3"
     else:
-        value = "3"
-        res_counter = 0
+        App.value = "3"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 def but4_click():
-    global value
-    global res_counter
-
-    if res_counter == 0:
-        value += "4"
+    if App.res_counter == 0:
+        App.value += "4"
     else:
-        value = "4"
-        res_counter = 0
+        App.value = "4"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 def but5_click():
-    global value
-    global res_counter
-
-    if res_counter == 0:
-        value += "5"
+    if App.res_counter == 0:
+        App.value += "5"
     else:
-        value = "5"
-        res_counter = 0
+        App.value = "5"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 def but6_click():
-    global value
-    global res_counter
-
-    if res_counter == 0:
-        value += "6"
+    if App.res_counter == 0:
+        App.value += "6"
     else:
-        value = "6"
-        res_counter = 0
+        App.value = "6"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 def but7_click():
-    global value
-    global res_counter
-
-    if res_counter == 0:
-        value += "7"
+    if App.res_counter == 0:
+        App.value += "7"
     else:
-        value = "7"
-        res_counter = 0
+        App.value = "7"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 def but8_click():
-    global value
-    global res_counter
-
-    if res_counter == 0:
-        value += "8"
+    if App.res_counter == 0:
+        App.value += "8"
     else:
-        value = "8"
-        res_counter = 0
+        App.value = "8"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 def but9_click():
-    global value
-    global res_counter
-
-    if res_counter == 0:
-        value += "9"
+    if App.res_counter == 0:
+        App.value += "9"
     else:
-        value = "9"
-        res_counter = 0
+        App.value = "9"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 def but0_click():
-    global value
-    global res_counter
-
-    if res_counter == 0:
-        value += "0"
+    if App.res_counter == 0:
+        App.value += "0"
     else:
-        value = "0"
-        res_counter = 0
+        App.value = "0"
+        App.res_counter = 0
 
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 # Функция для кнопки очистки
 def del_click():
-    global value
-    value = ""
+    App.value = ""
     global ent
-    ent["text"] = value
+    ent["text"] = App.value
 
 
 # Функция для кнопки результат
 def result():
-    global value
     global ent
-    global res_counter
-
-    res_counter = 1
+    App.res_counter = 1
 
     try:
         res = 1
-        for i in range(1, int(value)+1):
-            res *= i
+        for j in range(1, int(App.value)+1):
+            res *= j
 
-        value = str(res)
-        ent["text"] = str(value)
+        App.value = str(res)
+        ent["text"] = str(App.value)
     except Exception:
         ent["text"] = str("Введите значение")
 
+
 if __name__ == "__main__":
     # Создание интерфейса окна
-    app = App("Калькулятор факториалов", "500x450", "white")
-
-
+    app = App("Калькулятор факториалов", "500x450", "white")  # Создание экземпляра класса
     key = Frame(app.root, width=500, height=440, bg="white")  # Фрейм для кнопок
-
     header = Frame(app.root, width=24, height=20, bg="white")  # Хэдер
     lab1 = Label(header, text="Введите число для вычисления факториала:", width=200, bg='white', font=("Courier", 12))  # Надпись в хэдере
 
@@ -209,8 +172,13 @@ if __name__ == "__main__":
     position_y = [15, 15, 15, 100, 100, 100, 185, 185, 185, 270, 270, 270]
 
     for i in range(len(buttons_text)):
-        buttons_array.append(App.create_button(key, buttons_text[i], "white", 15, 4, functions[i]))
-        buttons_array[i].place(x=position_x[i], y=position_y[i])
+        if i < 10:
+            buttons_array.append(App.create_button(key, buttons_text[i], "white", 15, 4, functions[i]))
+            buttons_array[i].place(x=position_x[i], y=position_y[i])
+        else:
+            buttons_array.append(App.create_button(key, buttons_text[i], "red", 15, 4, functions[i]))
+            buttons_array[i]["fg"] = "white"
+            buttons_array[i].place(x=position_x[i], y=position_y[i])
 
     # Расоложение в окне
     header.pack(side=TOP)
