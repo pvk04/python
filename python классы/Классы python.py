@@ -57,15 +57,12 @@ class SmallHouse(House):
 
 
 if __name__ == "__main__":
-    Human.default_info()
-
-    alex = Human("Alex", 17)
-    alex.info()
-
-    little_house = SmallHouse(1500000)
-
-    alex.buy_house(little_house, 0)
-    alex.earn_money(1500000)
-    alex.buy_house(little_house, 0)
-
-    alex.info()
+    # Тесты
+    Human.default_info()  # Вызовите справочный метод default_info() для класса Human
+    alex = Human("Alex", 17)  # Создайте объект класса Human
+    alex.info()  # Выведите справочную информацию о созданном объекте (вызовите метод info()).
+    little_house = SmallHouse(1500000)  # Создайте объект класса SmallHouse
+    alex.buy_house(little_house, 0)  # Попробуйте купить созданный дом, убедитесь в получении предупреждения.
+    alex.earn_money(1500000)  # Поправьте финансовое положение объекта - вызовите метод earn_money()
+    alex.buy_house(little_house, 0)  # Снова попробуйте купить дом
+    alex.info()  # Посмотрите, как изменилось состояние объекта класса Human

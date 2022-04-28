@@ -1,7 +1,7 @@
 from tkinter import *
 
 
-# Создание классов для кнопок
+# Создание класса приложения
 class App:
     value = str("")
     res_counter = 0  # Вспомогательный счетчик
