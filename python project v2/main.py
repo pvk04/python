@@ -66,6 +66,8 @@ def play():
     play_win.resizable(width=False, height=False)
     play_win.title("Игра")
 
+    lvl_request = "SELECT text FROM level, "
+
 
 def open_leaderboard():
     pass
