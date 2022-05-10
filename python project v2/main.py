@@ -60,13 +60,29 @@ def login():
 
 # Root
 def play():
-    root.withdraw()
-    play_win = Toplevel(root)
-    play_win.geometry("500x450")
-    play_win.resizable(width=False, height=False)
-    play_win.title("Игра")
+    list = root.grid_slaves()
+    for elem in list:
+        elem.destroy()
 
-    lvl_request = "SELECT text FROM level, "
+    root["bg"] = "grey"
+
+    text1 = Entry(root, width=4)
+    text1.grid(row=1, column=0, padx=20, pady=20)
+    text2 = Entry(root, width=4)
+    text2.grid(row=1, column=1, padx=20, pady=20)
+    text3 = Entry(root, width=4)
+    text3.grid(row=1, column=2, padx=20, pady=20)
+    text4 = Entry(root, width=4)
+    text4.grid(row=1, column=3, padx=20, pady=20)
+    text5 = Entry(root, width=4)
+    text5.grid(row=1, column=4, padx=20, pady=20)
+
+    # i = 0
+    # while i != 10:
+    #     i+=1
+    #     root.grid_columnconfigure(i, maxsize=4)
+
+
 
 
 def open_leaderboard():
