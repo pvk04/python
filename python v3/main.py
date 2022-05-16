@@ -4,6 +4,8 @@ from config import host, user, password, db_name
 import random
 
 ############################################# Functions ################################################################
+attempts_num = 5
+
 
 # Auth
 def registration():
@@ -64,6 +66,7 @@ def login():
 
 # Root
 def play():
+    root.title("Игра")
     list = root.grid_slaves()
     for elem in list:
         elem.destroy()
@@ -74,18 +77,19 @@ def play():
     random_word = words[random.randint(0, len(words) - 1)]
     print(random_word)
 
-    lab1 = Label(root, text="Введите слово:", font=("Montserrat", 10), bg='grey')
-    lab1.grid(row=0, column=1, sticky='ws')
+    lab1 = Label(root, text="Введите слово:", font=("Montserrat", 11), bg='grey')
+    lab1.grid(row=0, column=1, columnspan=2, sticky='ws')
 
+    global attempts_num
     attempts_num = 5
-    lab2 = Label(root, text=f"Попытки: {attempts_num}", font=("Montserrat", 10), bg='grey')
+    lab2 = Label(root, text=f"Попытки: {attempts_num}", font=("Montserrat", 11), bg='grey')
     lab2.grid(row=0, column=3, sticky='se')
 
     entry_word = Entry(root, font=("Montserrat", 14), justify=CENTER, bd=5)
     entry_word.bind('<KeyPress>', lambda x: char_limit(entry_word, '4'))
     entry_word.grid(row=1, column=1, columnspan=3, sticky='we')
 
-    lab3 = Label(root, text="Найденные буквы:", font=("Montserrat", 10), bg='grey')
+    lab3 = Label(root, text="Найденные буквы:", font=("Montserrat", 11), bg='grey')
     lab3.grid(row=2, column=1, sticky='ws')
 
     frame_letters = Frame(root, bg='red', width=300, height=100)
@@ -97,8 +101,11 @@ def play():
     frame_letters.grid_rowconfigure(3, minsize=60)
     frame_letters.grid_rowconfigure(4, minsize=60)
 
-    button_try = Button(root, text="Проверить", font=("Montserrat", 12), command=lambda: check_word(button_try, entry_word, random_word, attempts_num))
+    button_try = Button(root, text="Проверить", font=("Montserrat", 12), command=lambda: check_word(entry_word, random_word, words, lab_err, lab2))
     button_try.grid(row=5, column=1, columnspan=3, sticky='we', pady=10)
+
+    lab_err = Label(root, text="", bg='grey', fg='red', font=("Montserrat", 10))
+    lab_err.grid(row=6, column=0, columnspan=5)
 
     root.grid_columnconfigure(0, minsize=90)
     root.grid_columnconfigure(1, minsize=90)
@@ -110,30 +117,54 @@ def play():
 def char_limit(entry, count):
     entry.delete(count, END)
 
-def check_word(button, entry, solve, attempts_num):
+
+def check_word(entry, solve, arr, err, attempts_lab):
+    global attempts_num
     users_word = entry.get().lower()
     solve = solve.lower()
+    contains = False
+    err["text"] = ""
+    word_for_check = ""
 
-    if users_word == solve:
-        button.configure(state='disable')
-        congrats = Toplevel(root)
-        congrats.geometry("200x200")
-        congrats.resizable(width=False, height=False)
-        lab = Label(congrats, text="Вы угадали!", font=("Montserrat", 12))
-        lab.grid(row=0, column=1)
+    letters_contains = []
 
-        lab1 = Label(congrats, text=f"Вы получаете: {attempts_num*10} очков", font=("Montserrat", 12))
-        lab1.grid(row=1, column=0, columnspan=3)
+    if users_word == solve and attempts_num != 0:
+        list = root.grid_slaves()
+        for elem in list:
+            elem.destroy()
 
-        button_play_again = Button(congrats, text="Играть снова", font=("Montserrat", 12), command=lambda: play_again(congrats))
-        button_play_again.grid(row=2, column=0, columnspan=3, pady=10)
+        lab = Label(root, text="Вы угадали!", font=("Montserrat", 20))
+        lab.grid(row=0, column=1, columnspan=3)
 
-        button_menu = Button(congrats, text="Меню", font=("Montserrat", 12))
-        button_menu.grid(row=3, column=1, pady=10)
+        lab1 = Label(root, text=f"Вы получаете: {attempts_num*10} очков", font=("Montserrat", 14))
+        lab1.grid(row=1, column=1, columnspan=3, sticky='we')
 
-def play_again(toplevel):
-    toplevel.destroy()
-    play()
+        button_play_again = Button(root, text="Играть снова", font=("Montserrat", 14), command=play)
+        button_play_again.grid(row=2, column=2, pady=10)
+
+        button_menu = Button(root, text="Меню", font=("Montserrat", 14))
+        button_menu.grid(row=3, column=2, pady=10)
+    elif attempts_num == 0:
+        pass
+    else:
+        for elem in arr:
+            if users_word == elem.lower():
+                contains = True
+                word_for_check = elem.lower()
+                print("true")
+                break
+
+    if contains:
+        for let in range(len(solve)):
+            if solve[let] == word_for_check[let]:
+                letters_contains.append(solve[let])
+        print(letters_contains)
+        attempts_num -= 1
+    else:
+        err["text"] = "Такого слова нет в нашем словаре"
+
+
+    attempts_lab["text"] = f"Попыток: {attempts_num}"
 
 def open_leaderboard():
     pass
@@ -142,17 +173,25 @@ def open_leaderboard():
 def open_rules():
     root.withdraw()
     rules = Toplevel(root)
-    rules.geometry("500x450")
+    rules.title("Правила")
+    w = root.winfo_screenwidth()
+    h = root.winfo_screenheight()
+    w = w // 2
+    h = h // 2
+    rules.geometry(f'500x450+{w - 250}+{h - 225}')
     rules.resizable(width=False, height=False)
     rules.title("Правила")
 
     rules_lab = Label(rules, font=("Montserrat", 14), wraplength=450)
-    rules_lab["text"] = "Вам дается задача и вы должны ее решить и вписать ответ в окно. Если ответ верный, " \
-                        "вам зачисляются очки. Если неверный, вы переходите к следующей задаче."
+    rules_lab["text"] = "Игра загадывает слово и вам нужно его отгадать. " \
+                        "Вы должны ввести любое существующее слово из 5 букв. " \
+                        "Если буквы из введенного слова есть в загаданном  слове и они находяться в этом же месте, " \
+                        "то они подсветятся красным, если на другом месте - оранжевым. Если их нет," \
+                        " то они не подсветятся"
     rules_lab.pack(side=TOP, pady=70)
 
     button_back = Button(rules, text="Назад", font=("Montserrat", 14), command=lambda: back(rules, root))
-    button_back.pack(side=BOTTOM, pady=70)
+    button_back.pack(side=BOTTOM, pady=10)
 
 
 def open_stat():
@@ -194,8 +233,12 @@ except Exception as ex:
 
 # GUI
 root = Tk()
-root.title("Приложение")
-root.geometry("500x450")
+root.title("Главное меню")
+w = root.winfo_screenwidth()
+h = root.winfo_screenheight()
+w = w//2  # середина экрана
+h = h//2
+root.geometry(f'500x450+{w-250}+{h-225}')
 root.resizable(width=False, height=False)
 root["bg"] = "white"
 
@@ -228,11 +271,13 @@ root.rowconfigure(3, minsize=60)
 root.rowconfigure(4, minsize=60)
 
 
-
-# Authentification
-
+# Auth
 auth = Toplevel(root)
-auth.geometry("400x200")
+w = root.winfo_screenwidth()
+h = root.winfo_screenheight()
+w = w//2
+h = h//2
+auth.geometry(f'400x200+{w-200}+{h-100}')
 auth.title("Авторизация")
 auth.resizable(width=False, height=False)
 auth["bg"] = "white"
