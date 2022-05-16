@@ -1,4 +1,4 @@
-host = "127.0.0.1"
-user = "root"
-password = "5V;Az2K{v+T@JC7q"
-db_name = "python_db"
+host = "195.161.41.242"
+user = "j34682228_user"
+password = "grechka12"
+db_name = "j34682228_project"
