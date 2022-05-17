@@ -6,7 +6,6 @@ import random
 ############################################# Functions ################################################################
 attempts_num = 5
 
-
 # Auth
 def registration():
     login = entry_login.get()
@@ -65,6 +64,27 @@ def login():
 
 
 # Root
+
+def main_menu():
+    root.title("Главное меню")
+    root["bg"] = "white"
+
+    menu_lab = Label(root, text="МЕНЮ", bg="white", font=("Montserrat", 20))
+    menu_lab.grid(row=0, column=1, columnspan=3, stick='we')
+
+    button_play = Button(root, text="Играть", font=("Montserrat", 14), command=play)
+    button_play.grid(row=1, column=1, columnspan=3, stick='we')
+
+    button_stat = Button(root, text="Статистика", font=("Montserrat", 14))
+    button_stat.grid(row=2, column=1, columnspan=3, stick='we')
+
+    button_leaderboard = Button(root, text="Таблица лидеров", font=("Montserrat", 14))
+    button_leaderboard.grid(row=3, column=1, columnspan=3, stick='we')
+
+    button_rules = Button(root, text="Правила", font=("Montserrat", 14), command=open_rules)
+    button_rules.grid(row=4, column=1, columnspan=3, stick='we')
+
+
 def play():
     root.title("Игра")
     list = root.grid_slaves()
@@ -142,10 +162,24 @@ def check_word(entry, solve, arr, err, attempts_lab):
         button_play_again = Button(root, text="Играть снова", font=("Montserrat", 14), command=play)
         button_play_again.grid(row=2, column=2, pady=10)
 
-        button_menu = Button(root, text="Меню", font=("Montserrat", 14))
+        button_menu = Button(root, text="Меню", font=("Montserrat", 14), command=main_menu)
         button_menu.grid(row=3, column=2, pady=10)
     elif attempts_num == 0:
-        pass
+        list = root.grid_slaves()
+        for elem in list:
+            elem.destroy()
+
+        lab = Label(root, text="Попытки закончились!", font=("Montserrat", 20))
+        lab.grid(row=0, column=1, columnspan=3)
+
+        lab1 = Label(root, text=f"Загадонное слово: {solve}", font=("Montserrat", 14))
+        lab1.grid(row=1, column=1, columnspan=3, sticky='we')
+
+        button_play_again = Button(root, text="Играть снова", font=("Montserrat", 14), command=play)
+        button_play_again.grid(row=2, column=2, pady=10)
+
+        button_menu = Button(root, text="Меню", font=("Montserrat", 14), command=main_menu)
+        button_menu.grid(row=3, column=2, pady=10)
     else:
         for elem in arr:
             if users_word == elem.lower():
@@ -163,8 +197,9 @@ def check_word(entry, solve, arr, err, attempts_lab):
     else:
         err["text"] = "Такого слова нет в нашем словаре"
 
-
     attempts_lab["text"] = f"Попыток: {attempts_num}"
+
+
 
 def open_leaderboard():
     pass
@@ -221,7 +256,7 @@ try:
         cursor = connection.cursor()
         print("Cursor created...")
     except Exception as ex:
-        print("Failet to create cursor...")
+        print("Failed to create cursor...")
         print(ex)
 except Exception as ex:
     print("Connection failed...")
@@ -230,89 +265,69 @@ except Exception as ex:
 
 ##################################################### GUI ##############################################################
 
+if __name__ == "__main__":
+    root = Tk()
+    w = root.winfo_screenwidth()
+    h = root.winfo_screenheight()
+    w = w // 2  # середина экрана
+    h = h // 2
+    root.geometry(f'500x450+{w - 250}+{h - 225}')
+    root.resizable(width=False, height=False)
+    root.grid_columnconfigure(0, minsize=100)
+    root.grid_columnconfigure(1, minsize=100)
+    root.grid_columnconfigure(2, minsize=100)
+    root.grid_columnconfigure(3, minsize=100)
+    root.grid_columnconfigure(4, minsize=100)
+    root.rowconfigure(0, minsize=100)
+    root.rowconfigure(1, minsize=60)
+    root.rowconfigure(2, minsize=60)
+    root.rowconfigure(3, minsize=60)
+    root.rowconfigure(4, minsize=60)
 
-# GUI
-root = Tk()
-root.title("Главное меню")
-w = root.winfo_screenwidth()
-h = root.winfo_screenheight()
-w = w//2  # середина экрана
-h = h//2
-root.geometry(f'500x450+{w-250}+{h-225}')
-root.resizable(width=False, height=False)
-root["bg"] = "white"
+    main_menu()
 
-menu_lab = Label(root, text="МЕНЮ", bg="white", font=("Montserrat", 20))
-menu_lab.grid(row=0, column=1, columnspan=3, stick='we')
+    # Auth
+    auth = Toplevel(root)
+    w = root.winfo_screenwidth()
+    h = root.winfo_screenheight()
+    w = w//2
+    h = h//2
+    auth.geometry(f'400x200+{w-200}+{h-100}')
+    auth.title("Авторизация")
+    auth.resizable(width=False, height=False)
+    auth["bg"] = "white"
 
-button_play = Button(root, text="Играть", font=("Montserrat", 14), command=play)
-button_play.grid(row=1, column=1, columnspan=3, stick='we')
+    account_id = 0
 
-button_stat = Button(root, text="Статистика", font=("Montserrat", 14))
-button_stat.grid(row=2, column=1, columnspan=3, stick='we')
+    auth_lab1 = Label(auth, text="Войдите или зарегистрируйтесь", bg="white", font=("Montserrat", 12))
+    auth_lab1.grid(row=0, column=0, columnspan=4)
 
-button_leaderboard = Button(root, text="Таблица лидеров", font=("Montserrat", 14))
-button_leaderboard.grid(row=3, column=1, columnspan=3, stick='we')
+    auth_lab2 = Label(auth, text="Логин", bg="white", font=("Montserrat", 10))
+    auth_lab2.grid(row=2, column=0)
+    entry_login = Entry(auth, bd=3)
+    entry_login.bind('<KeyPress>', lambda x: char_limit(entry_login, '14'))
+    entry_login.grid(row=2, column=1, columnspan=2, stick='we')
 
-button_rules = Button(root, text="Правила", font=("Montserrat", 14), command=open_rules)
-button_rules.grid(row=4, column=1, columnspan=3, stick='we')
+    auth_lab3 = Label(auth, text="Пароль", bg="white", font=("Montserrat", 10))
+    auth_lab3.grid(row=5, column=0)
+    entry_password = Entry(auth, bd=3)
+    entry_password.bind('<KeyPress>', lambda x: char_limit(entry_password, '14'))
+    entry_password.grid(row=5, column=1, columnspan=2, stick='we')
 
+    error_label = Label(auth, text="", font=("Montserrat", 12), bg="white", wraplength=240)
+    error_label.grid(row=6,column=1, columnspan=2)
+    login_btn = Button(auth, text="Вход", font=("Montserrat", 12), bg="blue", fg="yellow", command=login)
+    login_btn.grid(row=7, column=1, stick='w')
+    register_btn = Button(auth, text="Регистрация", font=("Montserrat", 12), bg="blue", fg="yellow", command=registration)
+    register_btn.grid(row=7, column=2)
 
-root.grid_columnconfigure(0, minsize=100)
-root.grid_columnconfigure(1, minsize=100)
-root.grid_columnconfigure(2, minsize=100)
-root.grid_columnconfigure(3, minsize=100)
-root.grid_columnconfigure(4, minsize=100)
+    auth.grid_columnconfigure(0, minsize=100)
+    auth.grid_columnconfigure(1, minsize=100)
+    auth.grid_columnconfigure(2, minsize=100)
+    auth.grid_columnconfigure(3, minsize=100)
 
-root.rowconfigure(0, minsize=100)
-root.rowconfigure(1, minsize=60)
-root.rowconfigure(2, minsize=60)
-root.rowconfigure(3, minsize=60)
-root.rowconfigure(4, minsize=60)
+    auth.rowconfigure(1, minsize=20)
+    auth.rowconfigure(2, minsize=20)
 
-
-# Auth
-auth = Toplevel(root)
-w = root.winfo_screenwidth()
-h = root.winfo_screenheight()
-w = w//2
-h = h//2
-auth.geometry(f'400x200+{w-200}+{h-100}')
-auth.title("Авторизация")
-auth.resizable(width=False, height=False)
-auth["bg"] = "white"
-
-account_id = 0
-
-auth_lab1 = Label(auth, text="Войдите или зарегистрируйтесь", bg="white", font=("Montserrat", 12))
-auth_lab1.grid(row=0, column=0, columnspan=4)
-
-auth_lab2 = Label(auth, text="Логин", bg="white", font=("Montserrat", 10))
-auth_lab2.grid(row=2, column=0)
-entry_login = Entry(auth, bd=3)
-entry_login.bind('<KeyPress>', lambda x: char_limit(entry_login, '14'))
-entry_login.grid(row=2, column=1, columnspan=2, stick='we')
-
-auth_lab3 = Label(auth, text="Пароль", bg="white", font=("Montserrat", 10))
-auth_lab3.grid(row=5, column=0)
-entry_password = Entry(auth, bd=3)
-entry_password.bind('<KeyPress>', lambda x: char_limit(entry_password, '14'))
-entry_password.grid(row=5, column=1, columnspan=2, stick='we')
-
-error_label = Label(auth, text="", font=("Montserrat", 12), bg="white", wraplength=240)
-error_label.grid(row=6,column=1, columnspan=2)
-login_btn = Button(auth, text="Вход", font=("Montserrat", 12), bg="blue", fg="yellow", command=login)
-login_btn.grid(row=7, column=1, stick='w')
-register_btn = Button(auth, text="Регистрация", font=("Montserrat", 12), bg="blue", fg="yellow", command=registration)
-register_btn.grid(row=7, column=2)
-
-auth.grid_columnconfigure(0, minsize=100)
-auth.grid_columnconfigure(1, minsize=100)
-auth.grid_columnconfigure(2, minsize=100)
-auth.grid_columnconfigure(3, minsize=100)
-
-auth.rowconfigure(1, minsize=20)
-auth.rowconfigure(2, minsize=20)
-
-root.withdraw()
-root.mainloop()
+    root.withdraw()
+    root.mainloop()
